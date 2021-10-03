@@ -12,7 +12,6 @@ class Disciplina:
         horariosDivididos = np.split(np.array(horarios.split(', ')), 2)
         self.horarios = list(map(lambda horario: Horario(horario), horariosDivididos))
 
-        # self.horarios = Horario(horarios)
 
     def __repr__(self) -> str:
         return f'(cod={self.cod}, nome={self.nome}, curso={self.curso}, ch={self.ch}, horarios={self.ch})'

@@ -24,16 +24,6 @@ def horarioParaNumero(horario: str) -> int:
 
     return (diaParaNumero[dia] * 24 * 60) + (hora * 60) + minuto
 
-# Transforma um horário no format XXh:XX para um número
-# IMPLEMENTAÇÃO ANTIGA
-# def horarioParaNumero(horario: str) -> int:
-#     print(f'HORARIO = {horario}')
-
-#     partes = horario.split(':')
-#     horas = int(partes[0].replace('h', '')) * 60
-#     minutos = int(partes[1])
-
-#     return horas + minutos
 
 class Horario:
 
@@ -51,29 +41,3 @@ class Horario:
 
     def __repr__(self) -> str:
         return f'(inicio={self.inicio}, fim={self.fim})'
-
-##############################################
-# IMPLEMENTAÇÃO ANTIGA
-# class Horario:
-
-#     # faz o parse de uma linha e cria um objeto horário
-#     # Exemplo de horário
-#     # Segunda-feira 09h:50, Segunda-feira 10h:40, Quinta-feira 08h:50, Quinta-feira 09h:50
-#     def __init__(self, line) -> None:
-#         partes = np.array(line.split(','))
-#         dias = np.split(partes, 2)
-#         print(dias)
-#         print(dias[0][0].strip())
-#         print(dias[0][1].strip())
-
-#         inicio = dias[0][0].strip().split(' ')
-#         fim = dias[0][1].strip().split(' ')
-
-#         diaInicio = diaParaNumero[inicio[0]]
-#         diaFim = diaParaNumero[fim[0]]
-
-#         self.inicio = diaInicio + horarioParaNumero(inicio[1])
-#         self.fim = diaFim + horarioParaNumero(fim[1])
-
-#         print(self.inicio)
-#         print(self.fim)
