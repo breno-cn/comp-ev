@@ -9,6 +9,7 @@ def parseHorarios(horarios: str) -> List[Horario]:
     horariosArr = horarios.split(', ')
     return list(map(lambda horario: Horario(horario), horariosArr))
 
+
 class Disciplina:
 
     def __init__(self, cod: str, nome: str, curso: str, ch: int, horarios: str) -> None:
@@ -21,6 +22,21 @@ class Disciplina:
 
         # horariosDivididos = np.split(np.array(horarios.split(', ')), 2)
         # self.horarios = list(map(lambda horario: Horario(horario), horariosDivididos))
+
+    
+    # Esse método é utilizado para converter uma lista de disciplinas em um DataFrame
+    def dicionario(self):
+        return {
+            'cod': self.cod,
+            'nome': self.nome,
+            'curso': self.curso,
+            'ch': self.ch,
+            'horarios': self.horariosParaCsv(),
+            'horasAulas': self.horasAulas
+        }
+
+    def horariosParaCsv(self) -> str:
+        return ';'.join(map(lambda x: x.csv(), self.horarios))
 
 
     def __repr__(self) -> str:

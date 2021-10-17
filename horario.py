@@ -38,6 +38,10 @@ class Horario:
         self.inicio = horarioParaNumero(inicio)
         self.fim = self.inicio + HORA_AULA
 
+    # Método utilizado para usar o objeto em um DatFrame
+    def csv(self) -> str:
+        return f'{self.inicio}-{self.fim}'
+
     def __str__(self) -> str:
         return f'(inicio={self.inicio}, fim={self.fim})'
 

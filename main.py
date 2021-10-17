@@ -14,7 +14,7 @@ from Docente import Docente
 from horario import Horario
 
 def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
-    disciplinas = set()
+    disciplinas = []
 
     for i in range(len(horariosDf)):
         coluna = horariosDf.iloc[[i]].values[0]
@@ -28,17 +28,16 @@ def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
         # print(horarios)
 
         disciplina = Disciplina(cod, nome, curso, ch, horarios)
-        # disciplinas.append(disciplina)
-        disciplinas.add(disciplina)
+        disciplinas.append(disciplina)
+        # disciplinas.add(disciplina)
 
-    return disciplinas
+    disciplinasDf = pd.DataFrame([x.dicionario() for x in disciplinas])
+
+    return disciplinasDf
 
 
 # Cria uma solução válida aleatória
-def criaSolucaoInicial(disciplinas: Set[Disciplina], prioridade: DataFrame):
-    # print(disciplinas[:10])
-    # print(prioridade.head())
-
+def criaSolucaoInicial(disciplinas: DataFrame, prioridade: DataFrame):
     for indice in prioridade['Docente']:
         # sorteia uma disciplina aleatória para "servir de base" e retira ela do conjunto de disciplinas disponíveis
         # disciplina = random.choice(disciplinas)
@@ -59,9 +58,9 @@ def main():
     # print(horariosDf.iloc[[17]]) 
 
     disciplinas = criaDisciplinas(horariosDf)
-    # print(disciplinas)
+    print(disciplinas)
 
-    print(pd.DataFrame(disciplinas))
+    # print(pd.DataFrame(disciplinas))
     sys.exit(0)
 
     criaSolucaoInicial(disciplinas, prioridadesDf)
