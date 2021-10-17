@@ -1,40 +1,69 @@
 from os import sep
+from typing import List, Set
 import pandas as pd
+from pandas.core.frame import DataFrame
 from Disciplina import Disciplina
+
+import numpy as np
+
+import random
+
+import sys
+from Docente import Docente
 
 from horario import Horario
 
-def criaDisciplinas(horariosDf):
-    valores = horariosDf.values
-    valor = valores[2]
+def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
+    disciplinas = set()
 
-    # print(valores[0:5])
-    print(valor)
+    for i in range(len(horariosDf)):
+        coluna = horariosDf.iloc[[i]].values[0]
+        cod = coluna[0]
+        nome = coluna[1]
+        curso = coluna[2]
+        ch = coluna[3]
+        horarios = coluna[4]
 
-    disciplina = Disciplina(valor[0], valor[1], valor[2], valor[3], valor[4])
+        # print(coluna)
+        # print(horarios)
 
-    print('=' * 100)
-    print(disciplina.horarios)
-    print('=' * 100)
-    print(disciplina)
+        disciplina = Disciplina(cod, nome, curso, ch, horarios)
+        # disciplinas.append(disciplina)
+        disciplinas.add(disciplina)
 
-    pass
+    return disciplinas
+
+
+# Cria uma solução válida aleatória
+def criaSolucaoInicial(disciplinas: Set[Disciplina], prioridade: DataFrame):
+    # print(disciplinas[:10])
+    # print(prioridade.head())
+
+    for indice in prioridade['Docente']:
+        # sorteia uma disciplina aleatória para "servir de base" e retira ela do conjunto de disciplinas disponíveis
+        # disciplina = random.choice(disciplinas)
+        disciplina = random.sample(disciplinas, 1)[0]
+        disciplinas.remove(disciplina)
+        
+        docente = Docente(indice)
+        docente.adicionarDisciplina(disciplina)
+        
+        # print(f'disciplina: {disciplina}')
+        # print('\n\n\n')
+
 
 def main():
-    horarios = pd.read_csv('horarios.csv', sep=',')
+    horariosDf = pd.read_csv('horarios.csv', sep=',')
+    prioridadesDf = pd.read_csv('prioridades.csv', sep=',')
 
-    # print(horarios.head())
+    # print(horariosDf.iloc[[17]]) 
 
+    disciplinas = criaDisciplinas(horariosDf)
+    # print(disciplinas)
 
-    criaDisciplinas(horarios)
+    print(pd.DataFrame(disciplinas))
+    sys.exit(0)
 
-    # print(horarios.values)
-
-    # prioridades = pd.read_csv('prioridades.csv', sep=',')
-    # linha = horarios.iloc[[2]]
-    # print(linha['Cod. Disciplina'])
-    # print(linha['Nome Disciplina'])
-
-    # horario = Horario(horarios['Horarios'][1])
+    criaSolucaoInicial(disciplinas, prioridadesDf)
 
 main()

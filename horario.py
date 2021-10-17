@@ -9,6 +9,8 @@ diaParaNumero = {
     'Sábado': 5
 }
 
+HORA_AULA = 50
+
 def horarioParaNumero(horario: str) -> int:
     partes = horario.split(' ')
 
@@ -17,7 +19,7 @@ def horarioParaNumero(horario: str) -> int:
     dia = partes[0]
     horarioStr = partes[1].split('h:')
 
-    print(horarioStr)
+    # print(horarioStr)
 
     hora = int(horarioStr[0])
     minuto = int(horarioStr[1])
@@ -27,14 +29,14 @@ def horarioParaNumero(horario: str) -> int:
 
 class Horario:
 
-    def __init__(self, partes: str) -> None:
+    def __init__(self, inicio: str) -> None:
         # print(textoHorario)
         # partes = textoHorario.split(', ')
 
-        print(f'PARTES={partes}')
+        # print(f'PARTES={partes}')
 
-        self.inicio = horarioParaNumero(partes[0])
-        self.fim = horarioParaNumero(partes[1])
+        self.inicio = horarioParaNumero(inicio)
+        self.fim = self.inicio + HORA_AULA
 
     def __str__(self) -> str:
         return f'(inicio={self.inicio}, fim={self.fim})'
