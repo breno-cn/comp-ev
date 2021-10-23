@@ -1,6 +1,7 @@
 from typing import List
 import numpy as np
 from horario import Horario
+from horario import diaParaNumero
 
 import sys
 
@@ -19,10 +20,13 @@ class Disciplina:
         self.ch: int = ch
         self.horarios: List[Horario] = parseHorarios(horarios)
         self.horasAulas: int = len(self.horarios)
+        self.turma = f'{self.cod}{self.cod[-2]}'
 
         # horariosDivididos = np.split(np.array(horarios.split(', ')), 2)
         # self.horarios = list(map(lambda horario: Horario(horario), horariosDivididos))
 
+    def turnos(self) -> List[str]:
+        return [h.turno for h in self.horarios]
     
     # Esse método é utilizado para converter uma lista de disciplinas em um DataFrame
     def dicionario(self):
@@ -38,6 +42,5 @@ class Disciplina:
     def horariosParaCsv(self) -> str:
         return ';'.join(map(lambda x: x.csv(), self.horarios))
 
-
     def __repr__(self) -> str:
-        return f'(cod={self.cod}, nome={self.nome}, curso={self.curso}, ch={self.ch}, horarios={self.horarios}, horasAulas={self.horasAulas})'
+        return f'(cod={self.cod}, nome={self.nome}, curso={self.curso}, ch={self.ch}, horarios={self.horarios}, horasAulas={self.horasAulas}), turma={self.turma}'
