@@ -14,7 +14,7 @@ HORA_AULA = 50
 def horarioParaNumero(horario: str) -> int:
     partes = horario.split(' ')
 
-    print(partes)
+    # print(partes)
 
     dia = partes[0]
     horarioStr = partes[1].split('h:')

@@ -32,20 +32,37 @@ def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
         # disciplinas.add(disciplina)
 
     disciplinasDf = pd.DataFrame([x.dicionario() for x in disciplinas])
+    # print('*')
 
     return disciplinasDf
+
+
+def proxDisciplinaDisponivel(docente: Docente, disciplinas: DataFrame) -> Disciplina:
+    horasAulas = docente.horasAulas()
+    horasAulasCompativeis = disciplinas.query('(horasAulas + @horasAulas < 8) or (horasAulas + @horasAulas == 10) or (horasAulas + @horasAulas == 12)')
+    # print(horasAulasCompativeis)
+    return horasAulasCompativeis.sample(n=1)
 
 
 # Cria uma solução válida aleatória
 def criaSolucaoInicial(disciplinas: DataFrame, prioridade: DataFrame):
     for indice in prioridade['Docente']:
-        # sorteia uma disciplina aleatória para "servir de base" e retira ela do conjunto de disciplinas disponíveis
-        # disciplina = random.choice(disciplinas)
-        disciplina = random.sample(disciplinas, 1)[0]
-        disciplinas.remove(disciplina)
-        
+        # cria um objeto docente para trabalhar
         docente = Docente(indice)
-        docente.adicionarDisciplina(disciplina)
+
+        # sorteia uma disciplina aleatória para "servir de base" e retira ela do conjunto de disciplinas disponíveis
+        disciplina = disciplinas.sample(n=1).iloc[[0]].to_dict()
+
+        print(disciplina)
+        sys.exit(0)
+        # docente.adicionarDisciplina(disciplina)
+        
+        # verifica quais disciplinas ainda estão disponíveis que obedecem as regras
+        disponiveis = proxDisciplinaDisponivel(docente, disciplinas)
+
+        print('=' * 50)
+        print(disponiveis)
+        print('=' * 50)
         
         # print(f'disciplina: {disciplina}')
         # print('\n\n\n')
@@ -61,8 +78,9 @@ def main():
     print(disciplinas)
 
     # print(pd.DataFrame(disciplinas))
-    sys.exit(0)
+    # sys.exit(0)
 
-    criaSolucaoInicial(disciplinas, prioridadesDf)
+    # criaSolucaoInicial(disciplinas, prioridadesDf)
 
-main()
+if __name__ == '__main__':
+    main()
