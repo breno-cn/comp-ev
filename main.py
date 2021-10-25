@@ -19,6 +19,92 @@ from itertools import compress, product
 def combinacoes(items: List[any]) -> List[List[any]]:
     return ( list(compress(items,mask)) for mask in product(*[[0,1]]*len(items)) )
 
+def turmaDeGBC(cod: str) -> int:
+    return int(cod[-2])
+
+def turmaDeGSI(cod: str) -> int:
+        id = int(cod[-2:])
+
+        if id >= 1 and id <= 5:
+            return 1
+        
+        if id >= 6 and id <= 10:
+            return 2
+        
+        if id >= 11 and id <= 15:
+            return 3
+
+        if id >= 16 and id <= 20:
+            return 4
+
+        if id >= 21 and id <= 25:
+            return 5
+
+        if id >= 26 and id <= 30:
+            return 6
+
+        if id >= 31 and id <= 35:
+            return 7
+
+        if id >= 46 and id <= 79:
+            return 8
+        
+def turmaDeFACOM(cod: str) -> int:
+    turmas = {
+        'FACOM31701': 9,
+        'FACOM39017': 1,
+        'FACOM39018': 4,
+        'FACOM39020': 2,
+        'FACOM39101': 1,
+        'FACOM39201': 2,
+        'FACOM39302': 3,
+        'FACOM39401': 4,
+        'FACOM39501': 5,
+        'FACOM39502': 5,
+        'FACOM39601': 6,
+        'FACOM39602': 6,
+        'FACOM39702': 7,
+        'FACOM39801': 8,
+        'FACOM39802': 8,
+        'FACOM39803': 8,
+        'FACOM39301': 3,
+        'FACOM49010(U)': 1,
+        'FACOM49010(V)': 1,
+        'FACOM49050': 5,
+        'FACOM49060': 6,
+        'FACOM49070': 7,
+        'FACOM49080': 8,
+        'FACOM49010(W)': 1
+    }
+
+    return turmas[cod]
+
+def turmaDaDisciplina(cod: str) -> int:
+    # ONLY SANE OPTION
+    if cod.startswith('GBC'):
+        return turmaDeGBC(cod)
+
+    if cod.startswith('GSI'):
+        return turmaDeGSI(cod)
+
+    if cod.startswith('FACOM'):
+        return turmaDeFACOM(cod)
+
+    # casos especiais
+    else:
+        turmas = {
+            'GAG009': 1,
+            'GBT017': 4,
+            'GCI007': 1,
+            'GES005': 2,
+            'GES009': 3,
+            'GES013': 4,
+            'GFM015': 2,
+            'GGI036': 7,
+            'GGI041': 7,
+            'PGC101': 9
+        }
+        return turmas[cod]
 
 # OK
 def horariosPermitidos(disciplinas: List[Disciplina]) -> List[List[Disciplina]]:
@@ -44,9 +130,9 @@ def horariosPermitidos(disciplinas: List[Disciplina]) -> List[List[Disciplina]]:
 
     # print(mapHorasAulas)
 
-    disciplinasCopias = list(disciplinas)
-    for disciplina in disciplinas:
-
+    # disciplinasCopias = list(disciplinas)
+    # for disciplina in disciplinas:
+        
     
 
     # print(possiveisHorarios)
