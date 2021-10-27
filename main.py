@@ -1,3 +1,4 @@
+import itertools
 from os import sep
 from typing import List, Set
 import pandas as pd
@@ -15,6 +16,8 @@ from horario import Horario
 import horario
 
 from itertools import compress, product
+
+from inicial import solucaoInicial
 
 def combinacoes(items: List[any]) -> List[List[any]]:
     return ( list(compress(items,mask)) for mask in product(*[[0,1]]*len(items)) )
@@ -185,6 +188,7 @@ def apenasUmDocentePorTurma(disciplinas: List[List[Disciplina]]) -> List[List[Di
 
 def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
     disciplinas = []
+    # disciplinas = set()
 
     for i in range(len(horariosDf)):
         coluna = horariosDf.iloc[[i]].values[0]
@@ -200,6 +204,12 @@ def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
         disciplina = Disciplina(cod, nome, curso, ch, horarios)
         disciplinas.append(disciplina)
         # disciplinas.add(disciplina)
+
+    disciplinas = [d.ch for d in disciplinas]
+    result = [seq for i in range(len(disciplinas), 0, -1) for seq in itertools.combinations(disciplinas, i) if sum(seq) == 8]
+    print(result)
+
+    return disciplinas
 
     disciplinasDf = pd.DataFrame([x.dicionario() for x in disciplinas])
     # print('*')
@@ -260,6 +270,9 @@ def main():
     # print(horariosDf.iloc[[17]]) 
 
     disciplinas = criaDisciplinas(horariosDf)
+    # inicial = solucaoInicial(disciplinas, prioridadesDf, horariosDf)
+
+    # disciplinas = criaDisciplinas(horariosDf)
     # print(disciplinas)
 
     # print(pd.DataFrame(disciplinas))
