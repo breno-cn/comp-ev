@@ -19,95 +19,63 @@ from itertools import compress, product
 
 from inicial import solucaoInicial
 
+
+def horasAulasInvalidas(docentes: List[Docente]) -> List[Docente]:
+    return [d for d in docentes if d.horasAulas() < 8]
+
+    # for docente in docentes:
+        # print(f'docente: {docente.indice}, CH: {docente.horasAulas()}')
+
+#loop de professores dentro de loop de disciplinas
+#a disciplina pega as materias que o professor ja tem e aplica as regras 
+# se for valida adiciona 
+def primeiraSolucao(disciplinas: List[Disciplina], docentes: List[Docente], prioridades: DataFrame) -> List[List[any]]:
+    docscompletos = []
+    discobtidas = []
+    disciplinasCopia = list(disciplinas)
+    for disciplina in disciplinas:
+        for docente in docentes:
+            # if materia in docente.possiveismaterias
+            #   faz issae
+            # else
+            #   passa
+
+            if disciplina.cod in prioridades[prioridades.Docente == docente.indice].values[0][1:]:
+                if docente.adicionarDisciplina(disciplina) and disciplina in disciplinasCopia:
+                    if disciplina not in docente.disciplinas: 
+                        docente.disciplinas.append(disciplina)
+                    if docente.verificaHoras():
+                        docscompletos.append(docente)
+                    discobtidas.append(disciplina)
+                    disciplinasCopia.remove(disciplina) 
+                    # print('-' * 100)
+                    # print(docente)
+                    # print('-' * 100)
+                    break
+          
+    for d in discobtidas:
+        disciplinas.remove(d)
+    
+    for doc in docentes:
+        docentes.remove(doc)
+
+    #[1,2,3,4,5] - [1,4] = [2, 3, 5]
+    
+    for docente in docentes:
+        print('-' * 100)
+        print(docente)
+        print('-' * 100)
+
+    return disciplinas, docentes
+
+
+
+
+# O(2^n) kkkkkkkkkkkkkkkkkkkkkkk
 def combinacoes(items: List[any]) -> List[List[any]]:
     return ( list(compress(items,mask)) for mask in product(*[[0,1]]*len(items)) )
 
-def turmaDeGBC(cod: str) -> int:
-    return int(cod[-2])
 
-def turmaDeGSI(cod: str) -> int:
-        id = int(cod[-2:])
-
-        if id >= 1 and id <= 5:
-            return 1
-        
-        if id >= 6 and id <= 10:
-            return 2
-        
-        if id >= 11 and id <= 15:
-            return 3
-
-        if id >= 16 and id <= 20:
-            return 4
-
-        if id >= 21 and id <= 25:
-            return 5
-
-        if id >= 26 and id <= 30:
-            return 6
-
-        if id >= 31 and id <= 35:
-            return 7
-
-        if id >= 46 and id <= 79:
-            return 8
-        
-def turmaDeFACOM(cod: str) -> int:
-    turmas = {
-        'FACOM31701': 9,
-        'FACOM39017': 1,
-        'FACOM39018': 4,
-        'FACOM39020': 2,
-        'FACOM39101': 1,
-        'FACOM39201': 2,
-        'FACOM39302': 3,
-        'FACOM39401': 4,
-        'FACOM39501': 5,
-        'FACOM39502': 5,
-        'FACOM39601': 6,
-        'FACOM39602': 6,
-        'FACOM39702': 7,
-        'FACOM39801': 8,
-        'FACOM39802': 8,
-        'FACOM39803': 8,
-        'FACOM39301': 3,
-        'FACOM49010(U)': 1,
-        'FACOM49010(V)': 1,
-        'FACOM49050': 5,
-        'FACOM49060': 6,
-        'FACOM49070': 7,
-        'FACOM49080': 8,
-        'FACOM49010(W)': 1
-    }
-
-    return turmas[cod]
-
-def turmaDaDisciplina(cod: str) -> int:
-    # ONLY SANE OPTION
-    if cod.startswith('GBC'):
-        return turmaDeGBC(cod)
-
-    if cod.startswith('GSI'):
-        return turmaDeGSI(cod)
-
-    if cod.startswith('FACOM'):
-        return turmaDeFACOM(cod)
-
-    # casos especiais
-    else:
-        turmas = {
-            'GAG009': 1,
-            'GBT017': 4,
-            'GCI007': 1,
-            'GES005': 2,
-            'GES009': 3,
-            'GES013': 4,
-            'GFM015': 2,
-            'GGI036': 7,
-            'GGI041': 7,
-            'PGC101': 9
-        }
-        return turmas[cod]
 
 # OK
 def horariosPermitidos(disciplinas: List[Disciplina]) -> List[List[Disciplina]]:
@@ -186,7 +154,7 @@ def apenasUmDocentePorTurma(disciplinas: List[List[Disciplina]]) -> List[List[Di
     return resultado
 
 
-def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
+def criaDisciplinas(horariosDf: DataFrame) -> List[Disciplina]:
     disciplinas = []
     # disciplinas = set()
 
@@ -205,9 +173,9 @@ def criaDisciplinas(horariosDf: DataFrame) -> Set[Disciplina]:
         disciplinas.append(disciplina)
         # disciplinas.add(disciplina)
 
-    disciplinas = [d.ch for d in disciplinas]
-    result = [seq for i in range(len(disciplinas), 0, -1) for seq in itertools.combinations(disciplinas, i) if sum(seq) == 8]
-    print(result)
+    # disciplinas = [d.ch for d in disciplinas]
+    # result = [seq for i in range(len(disciplinas), 0, -1) for seq in itertools.combinations(disciplinas, i) if sum(seq) == 8]
+    # print(result)
 
     return disciplinas
 
@@ -269,7 +237,40 @@ def main():
 
     # print(horariosDf.iloc[[17]]) 
 
+
+
     disciplinas = criaDisciplinas(horariosDf)
+    docentes = [Docente(d) for d in prioridadesDf['Docente'].values]
+    
+    docentesaux = list(docentes)
+    # print(docentes)
+    # sys.exit(0)
+    disciplinas, docentesaux = primeiraSolucao(disciplinas, docentesaux, prioridadesDf)
+    # print(disciplinas)
+    for d in disciplinas:
+        print(d)
+    print('*' * 100)
+    for d in docentes:
+        print(d)
+
+
+    print('/' * 100)
+    insuficientes = horasAulasInvalidas(docentes)
+    for i in insuficientes:
+        print(f'{i.indice} {i.horasAulas()}')
+
+
+    print('+' * 100)
+    for i in docentes:
+        print(f'{i.indice} {i.horasAulas()}')
+
+    print('-' * 100)
+    for i in docentes:
+        print(f'{i.indice} {[d.ch for d in i.disciplinas]}')
+
+    # print(docentes)
+
+    
     # inicial = solucaoInicial(disciplinas, prioridadesDf, horariosDf)
 
     # disciplinas = criaDisciplinas(horariosDf)

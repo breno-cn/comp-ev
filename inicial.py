@@ -10,6 +10,11 @@ def proxDisciplinasPorCH(disciplinas: Set[Disciplina], docente: Docente, df: Dat
 
     pass
 
+# possiveis ideias
+# - passar o dataframe pra disciplina?
+# - usar query do pandas?
+# - FAZER MANUAL?
+# - como garantir as regras durante as mutações
 def solucaoInicial(disciplinas: Set[Disciplina], prioridades: DataFrame, df: DataFrame):
     for disciplina in disciplinas:
         print(disciplina)
@@ -18,6 +23,12 @@ def solucaoInicial(disciplinas: Set[Disciplina], prioridades: DataFrame, df: Dat
     for indice in prioridades['Docente']:
         # cria um objeto Docente para trabalhar
         docente = Docente(indice)
+
+        # pega a lista das matérias que ele está disponível
+        disponiveis = prioridades[prioridades.Docente == indice].values[0][1:]
+
+        # entra em um loop, adicionando matérias até completar 8 horas
+        
 
         # para cada Docente, sortear disciplinas que atendem a todas as regras consideradas
         # sorteia uma disciplina inicial para servir de base e retira ela do total 
@@ -29,6 +40,7 @@ def solucaoInicial(disciplinas: Set[Disciplina], prioridades: DataFrame, df: Dat
         curso = inicial[2]
         ch = inicial[3]
         horarios = inicial[4]
+        
         disciplina = Disciplina(cod, nome, curso, ch, horarios)        
         disciplinas.remove(inicial)
         docente.adicionarDisciplina(inicial)
@@ -38,3 +50,4 @@ def solucaoInicial(disciplinas: Set[Disciplina], prioridades: DataFrame, df: Dat
         while True:
             # proxDisciplina = 
             break
+
